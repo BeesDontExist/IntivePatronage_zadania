@@ -107,7 +107,8 @@ namespace ConsoleApp_Core
 
             if (number <= 0 || number > 5)
             {
-                Console.WriteLine("Number of directiories must be 1-5");
+                Console.WriteLine("Number of directiories must be 1-5 \n\nPress Enter To Continue");
+                Console.ReadKey();
                 return dirInfo;
             }
 
@@ -129,8 +130,17 @@ namespace ConsoleApp_Core
                 return ref dirInfo;
             
             string name = Guid.NewGuid().ToString();
-            path = path + @"\" + name;
-
+            try
+            {
+                path = Path.Combine(path, name);
+            }
+            catch(Exception e)
+            {
+                Console.WriteLine(e.Message);
+                Console.ReadKey();
+                return ref dirInfo;
+            }
+            
             if (System.IO.Directory.Exists(path)) { Console.WriteLine("Directory already exists"); return ref dirInfo; }
 
             System.IO.DirectoryInfo dir = System.IO.Directory.CreateDirectory(path);
@@ -165,7 +175,7 @@ namespace ConsoleApp_Core
                 return;
             }
 
-            string path = dirInfo[level - 1].FullName + @"\file.txt";
+            string path = dirInfo[level - 1].FullName + Path.DirectorySeparatorChar + "file";
             if(File.Exists(path))
             {
                 Console.WriteLine("File already exists, overwrite file? (Y/N)");
